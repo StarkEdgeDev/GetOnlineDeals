@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+        <import type="android.view.View" />
+
+        <variable
+            name="firstName"
+            type="String" />
+
+        <variable
+            name="lastName"
+            type="String" />
+
+        <variable
+            name="address"
+            type="String" />
+
+        <variable
+            name="city"
+            type="String" />
+
+        <variable
+            name="pin"
+            type="String" />
+
+        <variable
+            name="phone"
+            type="String" />
+
+        <variable
+            name="isSave"
+            type="Boolean" />
+
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".Features.BillingAddress.BillingAddress">
+
+        <include
+            layout="@layout/toolbar"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Billing address"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="First name"
+                    android:text="@={firstName}"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:maxLines="1"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/grey_stoke"
+                    android:padding="10dp"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Last name"
+                    android:text="@={lastName}"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:maxLines="1"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/grey_stoke"
+                    android:padding="10dp"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Address"
+                    android:maxLines="1"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:text="@={address}"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/grey_stoke"
+                    android:padding="10dp"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="City"
+                    android:text="@={city}"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:maxLines="1"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/grey_stoke"
+                    android:padding="10dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/grey_stoke"
+                    android:layout_height="wrap_content">
+
+                    <Spinner
+                        android:id="@+id/spCountry"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:spinnerMode="dropdown"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/grey_stoke"
+                    android:layout_height="wrap_content">
+
+                    <Spinner
+                        android:id="@+id/spState"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:spinnerMode="dropdown"/>
+
+                </LinearLayout>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="PIN Code"
+                    android:maxLines="1"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:text="@={pin}"
+                    android:inputType="textCapWords"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/grey_stoke"
+                    android:padding="10dp"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Phone"
+                    android:text="@={phone}"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:maxLines="1"
+                    android:inputType="phone"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/grey_stoke"
+                    android:padding="10dp"/>
+
+                <CheckBox
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Save this information for next time"
+                    android:checked="@={isSave}"
+                    android:layout_marginTop="10dp"/>
+
+                <Button
+                    android:id="@+id/btnAddShipping"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Complete Booking"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/white"
+                    android:background="@drawable/btn_selector_fb"/>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+</layout>

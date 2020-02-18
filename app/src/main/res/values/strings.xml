@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">GetOnlineDeals</string>
+
+    <string name="email_address">Email address</string>
+    <string name="password">Password</string>
+    <string name="login_with_facebook">Login with facebook</string>
+    <string name="create_account">Create account</string>
+    <string name="sign_in">Sign in</string>
+    <string name="sign_up_manually">Sign up manually</string>
+    <string name="forgot_password">Forgot password ?</string>
+    <string name="don_t_have_an_account">Don\'t have an account</string>
+    <string name="sign_up">Sign up</string>
+    <string name="already_have_an_account">Already have an account</string>
+    <string name="sign_in_manually">Sign in manually</string>
+    <string name="full_name">Full name</string>
+    <string name="phone">Phone</string>
+    <string name="enter_your_registered_email_to_reset_your_password">Enter your registered email to reset your password</string>
+    <string name="submit">Submit</string>
+    <string name="please_check_terms_and_conditions_privacy_policies">Please check terms of services and privacy policies</string>
+</resources>

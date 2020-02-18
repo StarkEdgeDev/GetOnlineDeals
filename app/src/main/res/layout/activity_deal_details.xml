@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="image"
+            type="String" />
+
+        <variable
+            name="name"
+            type="String" />
+
+        <variable
+            name="price"
+            type="String" />
+
+        <variable
+            name="discountedPrice"
+            type="String" />
+
+        <variable
+            name="percentSaved"
+            type="String" />
+
+        <variable
+            name="quantity"
+            type="String" />
+
+        <variable
+            name="handler"
+            type="com.app.getonlinedeals.OnClickEvent" />
+
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".Features.DealDetails.DealDetailsActivity">
+
+        <include
+            layout="@layout/toolbar"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    imageUrlBig="@{image}"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvImages"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:text="@{name}"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text="@{discountedPrice}"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/tvPrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text="@{price}"
+                    android:layout_marginTop="5dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{percentSaved}"
+                    android:padding="5dp"
+                    android:layout_marginTop="5dp"
+                    android:textAllCaps="true"
+                    android:textSize="13sp"
+                    android:background="@drawable/blue_stoke"
+                    android:textColor="@color/skyBlue"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text="Color"
+                    android:layout_marginTop="5dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:padding="5dp"
+                    android:background="@drawable/grey_stoke"
+                    android:layout_height="wrap_content">
+
+                    <Spinner
+                        android:id="@+id/spColors"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text="Quantity"
+                    android:layout_marginTop="5dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/grey_stoke"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/ivSubtract"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="15sp"
+                        android:onClick="@{(v) -> handler.onClick(v)}"
+                        android:src="@drawable/ic_subtract"/>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/greyLight"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:text="@{quantity}"/>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/greyLight"/>
+
+                    <ImageView
+                        android:id="@+id/ivAdd"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:onClick="@{(v) -> handler.onClick(v)}"
+                        android:padding="15sp"
+                        android:src="@drawable/ic_add"/>
+
+                </LinearLayout>
+
+
+                <Button
+                    android:id="@+id/btnCart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add to cart"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/white"
+                    android:onClick="@{(v) -> handler.onClick(v)}"
+                    android:textStyle="bold"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:background="@drawable/btn_selector"/>
+
+                <TextView
+                    android:id="@+id/tvHtml"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"/>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+</layout>
