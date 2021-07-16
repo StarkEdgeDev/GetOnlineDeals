@@ -12,7 +12,6 @@ import com.app.getonlinedeals.Features.BookingOptions.Booking;
 import com.app.getonlinedeals.Features.ShippingAddress.CountriesAdapter;
 import com.app.getonlinedeals.Features.ShippingAddress.CountriesListModel;
 import com.app.getonlinedeals.Features.ShippingAddress.StatesAdapter;
-import com.app.getonlinedeals.ProjectUtils.BaseCallBack;
 import com.app.getonlinedeals.R;
 import com.app.getonlinedeals.databinding.ActivityBillingAddressBinding;
 
@@ -24,7 +23,7 @@ public class BillingAddress extends BaseActivity<ActivityBillingAddressBinding, 
     private ArrayList<CountriesListModel.Provinces> states = new ArrayList<>();
     private Spinner spCountry, spState;
     private String countryName, stateName;
-    private CountriesAdapter adapter;
+    private CountriesAdapter countriesAdapter;
     private StatesAdapter statesAdapter;
 
     public static void start(Context context, String discountCode, AddressModel addressModel) {
@@ -50,34 +49,21 @@ public class BillingAddress extends BaseActivity<ActivityBillingAddressBinding, 
         findViewById(R.id.ivMenu).setVisibility(View.GONE);
         ImageView icBack = findViewById(R.id.ivBack);
         icBack.setVisibility(View.VISIBLE);
-        icBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        icBack.setOnClickListener(view -> finish());
 
         final AddressModel shippingAddress = (AddressModel) getIntent().getSerializableExtra("addressModel");
 
         getPresenter().getCOuntries();
         spCountry = binding.spCountry;
         spState = binding.spState;
-        adapter = new CountriesAdapter(getActivityG(), countries, new BaseCallBack<Integer>() {
-            @Override
-            public void onCallBack(Integer output) {
-                countryName = countries.get(output).getCode();
-                states.clear();
-                states.addAll(countries.get(output).getProvinces());
-                statesAdapter.notifyDataSetChanged();
-            }
+        countriesAdapter = new CountriesAdapter(getActivityG(), countries, output -> {
+            countryName = countries.get(output).getCode();
+            states.clear();
+            states.addAll(countries.get(output).getProvinces());
+            statesAdapter.notifyDataSetChanged();
         });
-        statesAdapter = new StatesAdapter(getActivityG(), states, new BaseCallBack<Integer>() {
-            @Override
-            public void onCallBack(Integer output) {
-                stateName = states.get(output).getCode();
-            }
-        });
-        spCountry.setAdapter(adapter);
+        statesAdapter = new StatesAdapter(getActivityG(), states, output -> stateName = states.get(output).getCode());
+        spCountry.setAdapter(countriesAdapter);
         spState.setAdapter(statesAdapter);
 
         binding.setIsSave(false);
@@ -95,19 +81,45 @@ public class BillingAddress extends BaseActivity<ActivityBillingAddressBinding, 
 
         final String discountCode = getIntent().getStringExtra("discountCode");
 
-        binding.btnAddShipping.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (getPresenter().isChecked()) {
-                    AddressModel addressModel = new AddressModel(city(), address(), lastName(), firstName(), "",
-                            state(), country(), pin(), phone());
-                    if (binding.getIsSave()) {
-                        getLocalData().saveBillingAddress(addressModel);
-                    }
-                    Booking.start(getActivityG(), discountCode, addressModel, shippingAddress);
+        binding.btnAddShipping.setOnClickListener(view -> {
+            if (getPresenter().isChecked()) {
+                AddressModel addressModel = new AddressModel(city(), address(), lastName(), firstName(), "",
+                        state(), country(), pin(), phone());
+                if (binding.getIsSave()) {
+                    getLocalData().saveBillingAddress(addressModel);
                 }
+                Booking.start(getActivityG(), discountCode, addressModel, shippingAddress);
             }
         });
+    }
+
+    @Override
+    public void countriesResponse(CountriesListModel output) {
+        countries.clear();
+        countries.addAll(output.getCountries());
+        countriesAdapter.notifyDataSetChanged();
+        if (getLocalData().getBillingAddress() != null) {
+            for (int i = 0; i < countries.size(); i++) {
+                if (countries.get(i).getCode().equals(getLocalData().getBillingAddress().getCountry())) {
+                    spCountry.setSelection(i);
+                    states.clear();
+                    states.addAll(output.getCountries().get(i).getProvinces());
+                    statesAdapter.notifyDataSetChanged();
+                    for (int j = 0; j < countries.get(i).getProvinces().size(); j++) {
+                        if (countries.get(i).getProvinces().get(j).getCode().equals(getLocalData().getBillingAddress().getState())) {
+                            final int finalJ = j;
+                            new Handler().postDelayed(() -> spState.setSelection(finalJ), 100);
+                            break;
+                        }
+                    }
+                }
+            }
+        } else {
+            states.clear();
+            states.addAll(output.getCountries().get(0).getProvinces());
+            statesAdapter.notifyDataSetChanged();
+            new Handler().postDelayed(() -> spState.setSelection(0), 100);
+        }
     }
 
     @Override
@@ -158,42 +170,5 @@ public class BillingAddress extends BaseActivity<ActivityBillingAddressBinding, 
     @Override
     public boolean isSave() {
         return binding.getIsSave();
-    }
-
-    @Override
-    public void countriesResponse(CountriesListModel output) {
-        countries.clear();
-        countries.addAll(output.getCountries());
-        adapter.notifyDataSetChanged();
-        if (getLocalData().getBillingAddress() != null) {
-            for (int i = 0; i < countries.size(); i++) {
-                if (countries.get(i).getCode().equals(getLocalData().getBillingAddress().getCountry())) {
-                    spCountry.setSelection(i);
-                    states.clear();
-                    states.addAll(output.getCountries().get(i).getProvinces());
-                    statesAdapter.notifyDataSetChanged();
-                    for (int j = 0; j < countries.get(i).getProvinces().size(); j++) {
-                        if (countries.get(i).getProvinces().get(j).getCode().equals(getLocalData().getBillingAddress().getState())) {
-                            final int finalJ = j;
-                            new Handler().postDelayed(new Runnable() {
-                                public void run() {
-                                    spState.setSelection(finalJ);
-                                }
-                            }, 100);
-                            break;
-                        }
-                    }
-                }
-            }
-        } else {
-            states.clear();
-            states.addAll(output.getCountries().get(0).getProvinces());
-            statesAdapter.notifyDataSetChanged();
-            new Handler().postDelayed(new Runnable() {
-                public void run() {
-                    spState.setSelection(0);
-                }
-            }, 100);
-        }
     }
 }

@@ -15,7 +15,6 @@ import com.app.getonlinedeals.Features.BillingAddress.AddressModel;
 import com.app.getonlinedeals.Features.ShippingCharges.CartAdapter;
 import com.app.getonlinedeals.Features.ShippingCharges.Discount;
 import com.app.getonlinedeals.Features.MyBag.CartModel;
-import com.app.getonlinedeals.ProjectUtils.BaseCallBack;
 import com.app.getonlinedeals.R;
 import com.app.getonlinedeals.databinding.ActivityShippingAddressBinding;
 
@@ -54,24 +53,16 @@ public class ShippingAddress extends BaseActivity<ActivityShippingAddressBinding
         findViewById(R.id.ivMenu).setVisibility(View.GONE);
         ImageView icBack = findViewById(R.id.ivBack);
         icBack.setVisibility(View.VISIBLE);
-        icBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        icBack.setOnClickListener(view -> finish());
 
-        binding.tvOrderSummary.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                isShowCart = !isShowCart;
-                if (isShowCart) {
-                    cartList.addAll(getLocalData().getCartItems());
-                } else {
-                    cartList.clear();
-                }
-                cartAdapter.notifyDataSetChanged();
+        binding.tvOrderSummary.setOnClickListener(view -> {
+            isShowCart = !isShowCart;
+            if (isShowCart) {
+                cartList.addAll(getLocalData().getCartItems());
+            } else {
+                cartList.clear();
             }
+            cartAdapter.notifyDataSetChanged();
         });
         RecyclerView rvCarts = binding.rvCarts;
         rvCarts.setLayoutManager(new LinearLayoutManager(getActivityG()));
@@ -82,21 +73,13 @@ public class ShippingAddress extends BaseActivity<ActivityShippingAddressBinding
         getPresenter().getCountries();
         spCountry = binding.spCountry;
         spState = binding.spState;
-        adapter = new CountriesAdapter(getActivityG(), countries, new BaseCallBack<Integer>() {
-            @Override
-            public void onCallBack(Integer output) {
-                countryName = countries.get(output).getCode();
-                states.clear();
-                states.addAll(countries.get(output).getProvinces());
-                statesAdapter.notifyDataSetChanged();
-            }
+        adapter = new CountriesAdapter(getActivityG(), countries, output -> {
+            countryName = countries.get(output).getCode();
+            states.clear();
+            states.addAll(countries.get(output).getProvinces());
+            statesAdapter.notifyDataSetChanged();
         });
-        statesAdapter = new StatesAdapter(getActivityG(), states, new BaseCallBack<Integer>() {
-            @Override
-            public void onCallBack(Integer output) {
-                stateName = states.get(output).getCode();
-            }
-        });
+        statesAdapter = new StatesAdapter(getActivityG(), states, output -> stateName = states.get(output).getCode());
         spCountry.setAdapter(adapter);
         spState.setAdapter(statesAdapter);
 
@@ -114,17 +97,14 @@ public class ShippingAddress extends BaseActivity<ActivityShippingAddressBinding
             binding.setCity(data.getCity());
         }
 
-        binding.btnAddShipping.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (getPresenter().isChecked()) {
-                    AddressModel addressModel = new AddressModel(city(), address(), lastName(), firstName(), email(),
-                            state(), country(), pin(), phone());
-                    if (isSave()) {
-                        getLocalData().saveShippingAddress(addressModel);
-                    }
-                    Discount.start(getActivityG(), addressModel);
+        binding.btnAddShipping.setOnClickListener(view -> {
+            if (getPresenter().isChecked()) {
+                AddressModel addressModel = new AddressModel(city(), address(), lastName(), firstName(), email(),
+                        state(), country(), pin(), phone());
+                if (isSave()) {
+                    getLocalData().saveShippingAddress(addressModel);
                 }
+                Discount.start(getActivityG(), addressModel);
             }
         });
     }
@@ -199,11 +179,7 @@ public class ShippingAddress extends BaseActivity<ActivityShippingAddressBinding
                     for (int j = 0; j < countries.get(i).getProvinces().size(); j++) {
                         if (countries.get(i).getProvinces().get(j).getCode().equals(getLocalData().getShippingAddress().getState())) {
                             final int finalJ = j;
-                            new Handler().postDelayed(new Runnable() {
-                                public void run() {
-                                    spState.setSelection(finalJ);
-                                }
-                            }, 100);
+                            new Handler().postDelayed(() -> spState.setSelection(finalJ), 100);
                             break;
                         }
                     }
@@ -213,11 +189,7 @@ public class ShippingAddress extends BaseActivity<ActivityShippingAddressBinding
             states.clear();
             states.addAll(output.getCountries().get(0).getProvinces());
             statesAdapter.notifyDataSetChanged();
-            new Handler().postDelayed(new Runnable() {
-                public void run() {
-                    spState.setSelection(0);
-                }
-            }, 100);
+            new Handler().postDelayed(() -> spState.setSelection(0), 100);
         }
     }
 }

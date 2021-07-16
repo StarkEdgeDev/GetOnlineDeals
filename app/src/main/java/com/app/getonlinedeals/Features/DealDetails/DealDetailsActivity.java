@@ -1,5 +1,6 @@
 package com.app.getonlinedeals.Features.DealDetails;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -17,7 +18,6 @@ import com.app.getonlinedeals.Base.BaseActivity;
 import com.app.getonlinedeals.Features.DealsList.DealsResponse;
 import com.app.getonlinedeals.Features.MyBag.MyBagActivity;
 import com.app.getonlinedeals.OnClickEvent;
-import com.app.getonlinedeals.ProjectUtils.BaseCallBack;
 import com.app.getonlinedeals.ProjectUtils.BaseUtils;
 import com.app.getonlinedeals.R;
 import com.app.getonlinedeals.databinding.ActivityDealDetailsBinding;
@@ -56,67 +56,51 @@ public class DealDetailsActivity extends BaseActivity<ActivityDealDetailsBinding
         findViewById(R.id.ivMenu).setVisibility(View.GONE);
         ImageView icBack = findViewById(R.id.ivBack);
         icBack.setVisibility(View.VISIBLE);
-        icBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        icBack.setOnClickListener(view -> finish());
 
         RecyclerView rvImages = binding.rvImages;
         rvImages.setLayoutManager(new LinearLayoutManager(getActivityG(), RecyclerView.HORIZONTAL, false));
-        imagesAdapter = new ImagesAdapter(imageArrayList, new BaseCallBack<String>() {
-            @Override
-            public void onCallBack(String output) {
-                binding.setImage(output);
-            }
-        });
+        imagesAdapter = new ImagesAdapter(imageArrayList, output -> binding.setImage(output));
         rvImages.setAdapter(imagesAdapter);
 
         Spinner spin = findViewById(R.id.spColors);
-        customAdapter = new CustomAdapter(getActivityG(), variantsList, new BaseCallBack<Integer>() {
-            @Override
-            public void onCallBack(Integer output) {
-                variantPosition = output;
-                for (int j = 0; j < imageArrayList.size(); j++) {
-                    if (variantsList.get(variantPosition).getImage_id() == null) return;
-                    if (variantsList.get(variantPosition).getImage_id().equals(imageArrayList.get(j).getId())) {
-                        binding.setImage(imageArrayList.get(j).getSrc());
-                        break;
-                    }
+        customAdapter = new CustomAdapter(getActivityG(), variantsList, output -> {
+            variantPosition = output;
+            for (int j = 0; j < imageArrayList.size(); j++) {
+                if (variantsList.get(variantPosition).getImage_id() == null) return;
+                if (variantsList.get(variantPosition).getImage_id().equals(imageArrayList.get(j).getId())) {
+                    binding.setImage(imageArrayList.get(j).getSrc());
+                    break;
                 }
             }
         });
         spin.setAdapter(customAdapter);
 
         getPresenter().getData();
-        OnClickEvent clickEvent = new OnClickEvent(new BaseCallBack<View>() {
-            @Override
-            public void onCallBack(View view) {
-                switch (view.getId()) {
-                    case R.id.ivAdd:
-                        quantityIs++;
-                        binding.setQuantity(quantityIs + "");
-                        break;
-                    case R.id.ivSubtract:
-                        if (quantityIs == 0) {
-                            displayError("This item is not in your cart");
-                            return;
-                        }
-                        quantityIs--;
-                        binding.setQuantity(quantityIs + "");
-                        break;
-                    case R.id.btnCart:
-                        if (variantsList.get(variantPosition).getInventory_quantity() == null ||
-                                Integer.parseInt(variantsList.get(variantPosition).getInventory_quantity()) < quantityIs) {
-                            displayError("Not enough items available.");
-                            return;
-                        }
-                        getPresenter().addToCart(variantsList.get(variantPosition).getId(), quantityIs + "",
-                                binding.getImage(), binding.getName(), price, variantsList.get(variantPosition).getTitle());
-                        MyBagActivity.start(getActivityG());
-                        break;
-                }
+        @SuppressLint("NonConstantResourceId") OnClickEvent clickEvent = new OnClickEvent(view -> {
+            switch (view.getId()) {
+                case R.id.ivAdd:
+                    quantityIs++;
+                    binding.setQuantity(quantityIs + "");
+                    break;
+                case R.id.ivSubtract:
+                    if (quantityIs == 0) {
+                        displayError("This item is not in your cart");
+                        return;
+                    }
+                    quantityIs--;
+                    binding.setQuantity(quantityIs + "");
+                    break;
+                case R.id.btnCart:
+                    if (variantsList.get(variantPosition).getInventory_quantity() == null ||
+                            Integer.parseInt(variantsList.get(variantPosition).getInventory_quantity()) < quantityIs) {
+                        displayError("Not enough items available.");
+                        return;
+                    }
+                    getPresenter().addToCart(variantsList.get(variantPosition).getId(), quantityIs + "",
+                            binding.getImage(), binding.getName(), price, variantsList.get(variantPosition).getTitle());
+                    MyBagActivity.start(getActivityG());
+                    break;
             }
         });
         binding.setHandler(clickEvent);

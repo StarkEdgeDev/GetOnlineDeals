@@ -35,12 +35,7 @@ public class DealsListActivity extends BaseActivity<ActivityDealsListBinding, De
         dealList = new ArrayList<DealsResponse.Products>();
         RecyclerView rvDeals = binding.rvDeals;
         rvDeals.setLayoutManager(new LinearLayoutManager(getActivityG()));
-        adapter = new DealsListAdapter(dealList, new BaseCallBack<String>() {
-            @Override
-            public void onCallBack(String id) {
-                DealDetailsActivity.start((Activity) getActivityG(), id, binding.rvDeals);
-            }
-        });
+        adapter = new DealsListAdapter(dealList, id -> DealDetailsActivity.start((Activity) getActivityG(), id, binding.rvDeals));
         rvDeals.setAdapter(adapter);
         getPresenter().getDeals();
     }

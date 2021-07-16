@@ -37,12 +37,9 @@ class BillingAddressPresenter extends BasePresenter<BillingAddressView> {
     void getCOuntries() {
         getView().showLoading("Please wait");
         createApiRequest(BaseApplication.getRetrofit().create(ApisHelper.class).getCountries(),
-                new BaseCallBack<CountriesListModel>() {
-                    @Override
-                    public void onCallBack(CountriesListModel output) {
-                        getView().hideLoading();
-                        getView().countriesResponse(output);
-                    }
+                output -> {
+                    getView().hideLoading();
+                    getView().countriesResponse(output);
                 });
     }
 }

@@ -12,7 +12,6 @@ import com.app.getonlinedeals.Base.BaseActivity;
 import com.app.getonlinedeals.Features.DealsList.DealsListActivity;
 import com.app.getonlinedeals.Features.ShippingCharges.Discount;
 import com.app.getonlinedeals.Features.ShippingAddress.ShippingAddress;
-import com.app.getonlinedeals.ProjectUtils.BaseCallBack;
 import com.app.getonlinedeals.R;
 import com.app.getonlinedeals.databinding.ActivityMyBagBinding;
 
@@ -44,12 +43,7 @@ public class MyBagActivity extends BaseActivity<ActivityMyBagBinding, MyBagPrese
         findViewById(R.id.ivMenu).setVisibility(View.GONE);
         ImageView icBack = findViewById(R.id.ivBack);
         icBack.setVisibility(View.VISIBLE);
-        icBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        icBack.setOnClickListener(view -> finish());
 
         RecyclerView rvCarts = binding.rvCarts;
         rvCarts.setLayoutManager(new LinearLayoutManager(getActivityG()));
@@ -63,47 +57,35 @@ public class MyBagActivity extends BaseActivity<ActivityMyBagBinding, MyBagPrese
         }
         list = getLocalData().getCartItems();
         getLocalData().saveDiscount(null);
-        adapter = new MyBagAdapter(list, new BaseCallBack<String>() {
-            @Override
-            public void onCallBack(String output) {
-                int position = Integer.parseInt(output.split(",")[0]);
-                if (output.split(",")[1].equals("remove")) {
-                    list.remove(position);
-                    getLocalData().setCartItems(list);
-                    binding.setTotalPrice("$" + getPresenter().totalPrice());
-                    adapter.notifyDataSetChanged();
-                } else {
-                    list.get(position).setPrice(getPresenter().realPrice(list.get(position).getPrice(), list.get(position).getQuantity(), output.split(",")[1]));
-                    list.get(position).setQuantity(output.split(",")[1]);
-                    getLocalData().setCartItems(list);
-                    binding.setTotalPrice("$" + getPresenter().totalPrice());
-                    adapter.notifyDataSetChanged();
-                }
+        adapter = new MyBagAdapter(list, output -> {
+            int position = Integer.parseInt(output.split(",")[0]);
+            if (output.split(",")[1].equals("remove")) {
+                list.remove(position);
+            } else {
+                list.get(position).setPrice(getPresenter().realPrice(list.get(position).getPrice(), list.get(position).getQuantity(), output.split(",")[1]));
+                list.get(position).setQuantity(output.split(",")[1]);
             }
+            getLocalData().setCartItems(list);
+            binding.setTotalPrice("$" + getPresenter().totalPrice());
+            adapter.notifyDataSetChanged();
         });
         rvCarts.setAdapter(adapter);
         binding.setTotalPrice("$" + getPresenter().totalPrice());
 
-        binding.btnProceedToCheckout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (getLocalData().getShippingAddress() == null) {
-                    ShippingAddress.start(getActivityG());
-                } else {
-                    Discount.start(getActivityG(), getLocalData().getShippingAddress());
-                }
+        binding.btnProceedToCheckout.setOnClickListener(view -> {
+            if (getLocalData().getShippingAddress() == null) {
+                ShippingAddress.start(getActivityG());
+            } else {
+                Discount.start(getActivityG(), getLocalData().getShippingAddress());
             }
         });
-        binding.tvContinueShopping.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getActivityG(), DealsListActivity.class);        // Specify any activity here e.g. home or splash or login etc
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(i);
-                finish();
-            }
+        binding.tvContinueShopping.setOnClickListener(view -> {
+            Intent i = new Intent(getActivityG(), DealsListActivity.class);        // Specify any activity here e.g. home or splash or login etc
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(i);
+            finish();
         });
     }
 

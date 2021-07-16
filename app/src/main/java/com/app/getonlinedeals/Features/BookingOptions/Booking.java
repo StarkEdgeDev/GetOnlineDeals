@@ -28,7 +28,7 @@ import java.util.ArrayList;
 public class Booking extends BaseActivity<ActivityBookingBinding, BookingPresenter> implements BookingView {
     private static final String CONFIG_CLIENT_ID = "AbsIVrhK9LE7TmwB_KjXsDrh9n_uh5er0OUinu74epqZISS60T1Nk3dnqkDy4i0rwoMH_XgcSf0DKpxh";
     private static final int REQUEST_CODE_PAYMENT = 1;
-    private static PayPalConfiguration config = new PayPalConfiguration()
+    final static PayPalConfiguration config = new PayPalConfiguration()
             .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
             .clientId(CONFIG_CLIENT_ID);
     private CartAdapter cartAdapter;
@@ -63,30 +63,22 @@ public class Booking extends BaseActivity<ActivityBookingBinding, BookingPresent
         intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
         startService(intent);
 
-        binding.btnPayment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (binding.getShippingType() == null) {
-                    displayError("Some error accrued. Please try later");
-                    return;
-                }
-                PayPalPayment thingToBuy = new PayPalPayment(new BigDecimal(effectivePrice), "USD",
-                        "GetOnlineDeals", PayPalPayment.PAYMENT_INTENT_SALE);
-                Intent intent = new Intent(getActivityG(), PaymentActivity.class);
-                intent.putExtra(PaymentActivity.EXTRA_PAYMENT, thingToBuy);
-                startActivityForResult(intent, REQUEST_CODE_PAYMENT);
+        binding.btnPayment.setOnClickListener(view -> {
+            if (binding.getShippingType() == null) {
+                displayError("Some error accrued. Please try later");
+                return;
             }
+            PayPalPayment thingToBuy = new PayPalPayment(new BigDecimal(effectivePrice), "USD",
+                    "GetOnlineDeals", PayPalPayment.PAYMENT_INTENT_SALE);
+            Intent intent1 = new Intent(getActivityG(), PaymentActivity.class);
+            intent1.putExtra(PaymentActivity.EXTRA_PAYMENT, thingToBuy);
+            startActivityForResult(intent1, REQUEST_CODE_PAYMENT);
         });
 
         findViewById(R.id.ivMenu).setVisibility(View.GONE);
         ImageView icBack = findViewById(R.id.ivBack);
         icBack.setVisibility(View.VISIBLE);
-        icBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        icBack.setOnClickListener(view -> finish());
 
         billingAddress = (AddressModel) getIntent().getSerializableExtra("billingAddress");
         shippingAddress = (AddressModel) getIntent().getSerializableExtra("shippingAddress");
@@ -105,17 +97,14 @@ public class Booking extends BaseActivity<ActivityBookingBinding, BookingPresent
         cartAdapter = new CartAdapter(cartList);
         rvCarts.setAdapter(cartAdapter);
 
-        binding.tvOrderSummary.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                isShowCart = !isShowCart;
-                if (isShowCart) {
-                    cartList.addAll(getLocalData().getCartItems());
-                } else {
-                    cartList.clear();
-                }
-                cartAdapter.notifyDataSetChanged();
+        binding.tvOrderSummary.setOnClickListener(view -> {
+            isShowCart = !isShowCart;
+            if (isShowCart) {
+                cartList.addAll(getLocalData().getCartItems());
+            } else {
+                cartList.clear();
             }
+            cartAdapter.notifyDataSetChanged();
         });
     }
 
@@ -166,7 +155,7 @@ public class Booking extends BaseActivity<ActivityBookingBinding, BookingPresent
     public void bookingResponse(String id) {
         if (id != null) {
             displayError("Booking successful");
-            getLocalData().setCartItems(new ArrayList<CartModel>());
+            getLocalData().setCartItems(new ArrayList<>());
         }
     }
 }
