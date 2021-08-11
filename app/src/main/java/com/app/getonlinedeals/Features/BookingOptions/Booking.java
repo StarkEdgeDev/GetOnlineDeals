@@ -32,7 +32,7 @@ public class Booking extends BaseActivity<ActivityBookingBinding, BookingPresent
             .environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
             .clientId(CONFIG_CLIENT_ID);
     private CartAdapter cartAdapter;
-    private ArrayList<CartModel> cartList = new ArrayList<>();
+    ArrayList<CartModel> cartList = new ArrayList<>();
     //https://github.com/paypal/PayPal-Android-SDK/issues/336   //4012001037167778
     private boolean isShowCart = false;
     private String effectivePrice = "";

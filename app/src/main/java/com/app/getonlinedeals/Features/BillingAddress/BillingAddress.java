@@ -19,8 +19,8 @@ import java.util.ArrayList;
 
 public class BillingAddress extends BaseActivity<ActivityBillingAddressBinding, BillingAddressPresenter>
         implements BillingAddressView {
-    private ArrayList<CountriesListModel.Countries> countries = new ArrayList<>();
-    private ArrayList<CountriesListModel.Provinces> states = new ArrayList<>();
+    ArrayList<CountriesListModel.Countries> countries = new ArrayList<>();
+    ArrayList<CountriesListModel.Provinces> states = new ArrayList<>();
     private Spinner spCountry, spState;
     private String countryName, stateName;
     private CountriesAdapter countriesAdapter;
